@@ -26,7 +26,7 @@ ssize_t file_write(struct file *pfille,const char __user *buff, size_t length, l
     printk(KERN_ALERT "%s of char driver\n",__FUNCTION__);
     for(i = 0; buff[i] != '\0' && buff[i] != -1; i++)
     {
-    	if(buff[i] > 96 && buff[i] < 123)
+    	if(buff[i] > 96 && buff[i] < 123) // convert the string small to capital
 	{
 	    buffer[i] = buff[i] - 32;
 	}
@@ -45,14 +45,14 @@ int file_close(struct inode *pinode, struct file *pfile)
     return 0;
 }
 
-struct file_operations entry_for_char_driver_file = {
+struct file_operations entry_for_char_driver_file = {     /* register our function inseaded normal file operation function */
     .owner   = THIS_MODULE,
     .open    = file_open,
     .read    = file_read,
     .write   = file_write,
     .release = file_close,
 };
-static int __init init_function(void)
+static int __init init_function(void)                          /*  init function when insmod will run */
 {
     printk(KERN_ALERT "%s of char driver\n",__FUNCTION__);
 
@@ -62,7 +62,7 @@ static int __init init_function(void)
     return 0;
 }
 
-__exit void exit_function(void)
+__exit void exit_function(void)					/* exit fuction when rmmod command excute */
 {
     printk(KERN_ALERT "%s of char driver\n",__FUNCTION__);
     unregister_chrdev(250,"simple_char_driver");
